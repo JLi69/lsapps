@@ -1,0 +1,3 @@
+#!/bin/sh
+INSTALL_DIR=/usr/local/bin
+cp lsapps $INSTALL_DIR/lsapps

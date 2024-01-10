@@ -194,7 +194,7 @@ func parseArgs() ArgOption {
 		}
 	}
 
-	return listAll
+	return listNames
 }
 
 func output(option ArgOption, info map[string]string) {
