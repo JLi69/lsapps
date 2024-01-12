@@ -96,18 +96,14 @@ func stripExec(exec string) string {
 // '=' is excluded to avoid breaking the parser of 'dmenu_alias'
 func getName(name string, exec string) string {
 	if len(name) < len(exec) {
-		//Remove '=' and replace them with ' ' to avoid breaking the parsing
-		//of dmenu_alias and trim the whitespace
-		return strings.Replace(strings.TrimSpace(name), "=", " ", -1)
+		return strings.TrimSpace(name)
 	}
 
 	if len(exec) <= len(name) && !strings.Contains(exec, "/") && !strings.Contains(exec, "=") {
 		return strings.TrimSpace(exec)
 	}
 
-	//Remove '=' and replace them with ' ' to avoid breaking the parsing
-	//of dmenu_alias and trim the whitespace
-	return strings.Replace(strings.TrimSpace(name), "=", " ", -1)
+	return strings.TrimSpace(name)
 }
 
 // Prints out every application, their preferred name, and exec string
@@ -137,7 +133,11 @@ func printDesktopInfo(info map[string]string) {
 
 	execStripped := stripExec(exec)
 	nameLowercase := strings.ToLower(name)
-	fmt.Printf("%s=%s\n", getName(nameLowercase, execStripped), execStripped)
+	fmt.Printf(
+		"%s=%s\n",
+		strings.Replace(getName(nameLowercase, execStripped), "=", "\\=", -1),
+		execStripped,
+	)
 }
 
 // Prints out an alias list for 'dmenu_alias'
@@ -166,7 +166,7 @@ func printAliases(info map[string]string) {
 
 	execStripped := stripExec(exec)
 	nameLowercase := strings.ToLower(name)
-	name = strings.Replace(getName(nameLowercase, execStripped), "=", " ", -1)
+	name = strings.Replace(getName(nameLowercase, execStripped), "=", "\\=", -1)
 	if name != execStripped {
 		fmt.Printf("%s=%s\n", name, execStripped)
 	}
@@ -212,7 +212,7 @@ func printExec(info map[string]string) {
 		return
 	}
 
-	if info["NoDisplay"] != "true" {
+	if info["NoDisplay"] == "true" {
 		return
 	}
 
